@@ -1,0 +1,15 @@
+services:
+  fitness:
+    build: .
+    image: fitness-app:latest
+    container_name: fitness-app
+    restart: unless-stopped
+    ports:
+      - "8091:8080"
+    environment:
+      - TZ=Europe/Berlin
+      - APP_PASSWORD=${APP_PASSWORD:-}
+      - TRAINER_EVENTS_URL=http://192.168.178.66:8090/api/seasons/1/events
+      - MEALIE_URL=http://192.168.178.195:9925
+    volumes:
+      - ./data:/data

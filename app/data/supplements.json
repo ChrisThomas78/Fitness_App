@@ -1,0 +1,50 @@
+{
+  "intro": "Supplements sind die letzten 5 %. Erst Essen, Bewegung, Schlaf. Du nimmst Blutdrucksenker, einen Betablocker, Pantoprazol und Limptar N (Chinin) – jede Neuerung deshalb erst mit dem Hausarzt abstimmen. Coach-Linie für November: nichts Neues kaufen, Bestehendes aufräumen, beim Arzttermin die Fragen unten klären.",
+  "alert": "Schmerzen links im Oberbauch („Milz“) sind ein Arztthema, kein Supplement-Thema. MSM bleibt pausiert, bis das abgeklärt ist. Bei starken oder zunehmenden Schmerzen, Fieber, Schwindel oder Schmerzen nach einem Sturz/Stoß: sofort ärztlich abklären (Notfall 112 bei sehr starken Schmerzen).",
+  "current": [
+    {"name": "Omega-3", "when": "morning", "dose": "2 Kapseln zum Essen", "status": "weiter",
+     "note": "Laut früherer Angabe 1.000 mg EPA + 500 mg DHA pro 2 Kapseln. Keine Blutverdünner → in der Regel unkritisch."},
+    {"name": "Multivitamin / Zink", "when": "morning", "dose": "1 Kapsel", "status": "weiter",
+     "note": "Fällt weg, falls du dich später für IM8 oder AG1 entscheidest (doppelte Vitamine)."},
+    {"name": "Vitamin D3+K2 (Bloom Naturals, 5.000 IE)", "when": "morning", "dose": "1 Tablette jeden 5. Tag", "status": "weiter",
+     "note": "So steht es auf der Packung. Die App markiert die Tage ab 2.11. Zusammen mit dem D3 im Jello (1.000 IE/Tag) kommst du auf ~2.000 IE/Tag im Schnitt – im Rahmen, aber: 25-OH-Vitamin-D beim Arzt messen lassen."},
+    {"name": "Magnesiumcitrat", "when": "evening", "dose": "nach Gesamtrechnung (siehe Hinweis)", "status": "prüfen",
+     "note": "Jello liefert schon 100 mg Magnesium. Für Magnesium aus Supplements gilt in der EU 250 mg/Tag als Orientierung (mehr → oft Durchfall/Bauchgrummeln – bei deinen Bauchbeschwerden relevant). Mg-Gehalt der Kapseln auf der Dose nachsehen und zusammenzählen."},
+    {"name": "Jello Calm Cocktail", "when": "evening", "dose": "1 Stick in 200 ml Wasser", "status": "prüfen",
+     "note": "Pro Stick laut Hersteller: 300 mg Ashwagandha (KSM-66), 100 mg Magnesium, 400 mg L-Theanin, 1.000 IE Vitamin D3. Ashwagandha kann den Blutdruck zusätzlich senken und beeinflusst die Schilddrüse; das BfR rät wegen seltener Leberschäden zur Vorsicht. → Mit dem Hausarzt klären, ob das zu deinen Blutdruckmitteln passt."},
+    {"name": "MSM", "when": "-", "dose": "PAUSE", "status": "pause",
+     "note": "Pausiert bis zur ärztlichen Abklärung der Oberbauchschmerzen. Kein eigenständiger Neustart."},
+    {"name": "Limptar N (Chinin, gegen Wadenkrämpfe)", "when": "evening", "dose": "wie ärztlich verordnet", "status": "arzt",
+     "note": "Ist ein Medikament, kein Magnesium. Beim Arzt fragen, ob es neben Magnesium noch nötig ist (Chinin kann den Herzrhythmus und das Blutbild beeinflussen)."}
+  ],
+  "compare": [
+    {"title": "Abends: Jello vs. Calma", "verdict": "Kein Wechsel nötig.",
+     "text": "Beide gehören zur selben Klasse: Magnesium + L-Theanin + Ashwagandha (+ Vitamin D). Die genaue Calma-Rezeptur konnte ich nicht verifizieren – Calma-Varianten am Markt enthalten ebenfalls Ashwagandha. Ein Wechsel bringt also nichts Neues. Entscheidend ist die Ashwagandha-Frage beim Arzt. Falls er abrät: L-Theanin + Magnesium ohne Ashwagandha, dazu eine feste Abendroutine (kein Handy 30 Min. vor dem Schlafen)."},
+    {"title": "Morgens: AG1 vs. IM8 vs. Longevity Complete", "verdict": "Erstmal keins. Wenn eins: höchstens eins, nach dem Arzttermin.",
+     "text": "AG1 und IM8 sind Multivitamin-plus-Greens-Pulver (~3–4 € pro Tag). IM8 enthält bereits Vitamin D3 (30 µg = 1.200 IE) und K2 (40 µg); dann fallen D3+K2-Tabletten und Multivitamin weg, sonst doppelst du. Longevity Complete (The Longevity Store) ist etwas anderes: Kreatin (3 g), Glycin, Ca-AKG, NR, Grüntee-Extrakt, Magnesium u. a. Kreatin ist für Krafttraining gut untersucht, erhöht aber den Kreatinin-Laborwert – vorher Nierenwerte checken und dem Arzt sagen; Grüntee-Extrakt kann die Leber belasten; das Magnesium zählt zur 250-mg-Rechnung. Greens-Pulver können Kalium enthalten – relevant, falls du ACE-Hemmer, Sartan oder Spironolacton nimmst. Für 3–4 € pro Tag bekommst du mehr mit: 250 g Skyr, eine Paprika, eine Handvoll Beeren und einer Dose Linsen pro Tag."}
+  ],
+  "plan": [
+    {"phase": "Ab sofort (November)", "items": ["MSM pausiert", "Omega-3, Multivitamin weiter", "D3+K2 jeden 5. Tag (App markiert)", "Jello weiter ODER pausieren bis zur Arztfrage – deine Wahl", "Magnesium-Gesamtmenge ausrechnen (Kapseln + Jello ≤ 250 mg)"]},
+    {"phase": "Nach dem Arzttermin", "items": ["Laborwerte: Vitamin D, Magnesium, B12 (Pantoprazol kann beide senken), Nieren, Leber, Kalium", "Ashwagandha ok? → Jello behalten oder ohne Ashwagandha weiter", "Wenn Morgendrink gewünscht: IM8 statt Multivitamin + D3/K2 (nicht zusätzlich)"]},
+    {"phase": "Ab Phase 3 (Dezember)", "items": ["Optional Kreatin 3 g/Tag fürs Krafttraining – nur nach Okay zu den Nierenwerten", "Eiweiß lieber über Essen (Skyr, Eier, Hüttenkäse) als über Pulver"]}
+  ],
+  "doctor": [
+    "Oberbauchschmerzen links („Milz“) seit Beginn der Supplements – abklären (Ultraschall?)",
+    "Regelmäßige Bauch-/Darmschmerzen – Ursache?",
+    "Passt Ashwagandha (Jello) zu meinen Blutdruckmitteln und zum Betablocker?",
+    "Laborwerte: 25-OH-Vitamin-D, Magnesium, B12 (Langzeit-Pantoprazol), Kalium, Nieren, Leber",
+    "Limptar N: noch nötig, wenn Magnesium genommen wird?",
+    "Welche Blutdruckmittel genau – ist Kalium in Greens-Pulvern ein Problem?",
+    "Darf ich Kreatin nehmen (Nieren)?",
+    "Wassereinlagerungen & Pigmentflecken – venös, Herz, Niere, Leber?",
+    "Freigabe für das langsame Kraft- und Gehprogramm; Kompressionsstrümpfe beim Training?",
+    "Achillessehne & Knie: Überweisung Physio – welche Belastung ist ok?"
+  ],
+  "sources": [
+    {"title": "Jello Calm Cocktail – Herstellerseite", "url": "https://trinkjello.com/en-us/products/jello-calm-cocktail-broad-c"},
+    {"title": "IM8 Daily Ultimate Essentials", "url": "https://im8health.com/products/daily-ultimate-essentials-pro-all-in-one-supplement-30-days-refills-pro"},
+    {"title": "AG1 vs IM8 Vergleich", "url": "https://trailandkale.com/ag1-vs-im8-daily-ultimate-essentials/"},
+    {"title": "The Longevity Store – Inhaltsstoffe (brandsearch)", "url": "https://brandsearch.co/brands/thelongevitystore.com"},
+    {"title": "Calma (Amazon-Listing, Rezeptur unverifiziert)", "url": "https://www.amazon.com/Calma-Watermelon-Magnesium-Ashwagandha-L-Theanine/dp/B0F7QX8Y71"}
+  ]
+}
