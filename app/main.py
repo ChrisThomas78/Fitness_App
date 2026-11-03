@@ -225,12 +225,18 @@ async def post_nutrition(request: Request):
     day = str(b.get("date") or date.today().isoformat())[:10]
     date.fromisoformat(day)
     vals = {k: num(b.get(k)) for k in ("kcal", "protein", "carbs", "fat")}
+    w = num(b.get("weight"))
+    if not vals["kcal"] and not w:
+        # leerer Import (z. B. falscher Filter im Kurzbefehl) darf vorhandene Werte nicht löschen
+        return {"ok": False, "day": day, "error": "keine kcal empfangen – nichts geändert"}
     with db() as c:
-        c.execute("INSERT INTO nutrition(day,kcal,protein,carbs,fat,source,updated) VALUES(?,?,?,?,?,?,?) "
-                  "ON CONFLICT(day) DO UPDATE SET kcal=excluded.kcal, protein=excluded.protein, carbs=excluded.carbs,"
-                  " fat=excluded.fat, source=excluded.source, updated=excluded.updated",
-                  (day, vals["kcal"], vals["protein"], vals["carbs"], vals["fat"], b.get("source", "health"), now()))
-        w = num(b.get("weight"))
+        if vals["kcal"]:
+            # fehlende Makros überschreiben vorhandene nicht (COALESCE)
+            c.execute("INSERT INTO nutrition(day,kcal,protein,carbs,fat,source,updated) VALUES(?,?,?,?,?,?,?) "
+                      "ON CONFLICT(day) DO UPDATE SET kcal=excluded.kcal, protein=COALESCE(excluded.protein, protein),"
+                      " carbs=COALESCE(excluded.carbs, carbs), fat=COALESCE(excluded.fat, fat),"
+                      " source=excluded.source, updated=excluded.updated",
+                      (day, vals["kcal"], vals["protein"], vals["carbs"], vals["fat"], b.get("source", "health"), now()))
         if w:
             cur = get_log(c, day)
             cur.setdefault("weight", w)

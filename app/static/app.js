@@ -310,8 +310,9 @@ function renderSettings() {
         <li>Ganz oben: <b>„Datum“</b> (aktuelles Datum) → <b>„Datum anpassen“: Anfang von Tag</b> → Variable <i>heute0</i>. Dann <b>„Datum anpassen“: 1 Tag subtrahieren</b> von <i>heute0</i> → Variable <i>gestern0</i>.</li>
         <li>In jedem „Health-Samples suchen“ den Filter ändern auf <b>Startdatum ist zwischen <i>gestern0</i> und <i>heute0</i></b>.</li>
         <li><b>„Datum formatieren“</b>: <i>gestern0</i>, Format benutzerdefiniert <code>yyyy-MM-dd</code> → im JSON zusätzlich das Feld <code>date</code> damit füllen.</li>
+        <li><b>Gewicht weglassen:</b> das „Health-Samples suchen“ für <i>Gewicht</i> und das Feld <code>weight</code> im JSON löschen – um 7 Uhr wäre das schon das Gewicht von heute.</li>
       </ol>
-      <div class="small muted">Ohne Feld <code>date</code> landet der Wert auf heute – dann wäre der Vortag falsch gebucht. Die Bezeichnungen können je nach iOS-Version leicht abweichen.</div></div>
+      <div class="small muted">Ohne Feld <code>date</code> landet der Wert auf heute – dann wäre der Vortag falsch gebucht. Kommen keine kcal an (0 oder leer), ändert die App nichts und antwortet ohne <code>"ok":true</code> – dann kommt die Fehlermeldung. Die Bezeichnungen können je nach iOS-Version leicht abweichen.</div></div>
     <div class="card"><h3>Für den Coach</h3><div class="small">Alle Einträge als JSON: <a href="/api/export" target="_blank">/api/export</a> – damit kann Claude (oder dein lokales LLM) den Plan anpassen.</div></div>`;
   $('#save').onclick = async () => {
     S.cfg.settings = await api('settings', { method: 'PUT', body: JSON.stringify({
