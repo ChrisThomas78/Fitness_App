@@ -23,5 +23,6 @@ Rezepte aus Mealie, Verlauf. FastAPI + SQLite, läuft neben dem Trainingsplaner 
 - `PUT /api/settings` – `{strength_days: 2|3|4, minutes: 20|30|45, level: "auto"|"1"|"2"|"3", kcal_target, protein_target, doctor_ok}`
 - `POST /api/nutrition` – `{date, kcal, protein, carbs, fat, weight}` (iOS-Kurzbefehl aus Apple Health/Yazio)
 - `GET /api/stats`, `GET /api/export`
+- `GET /api/homepage` – Kurzwerte für die Homelab-Startseite (Woche/Phase, heute erledigt, als Nächstes, Ernährung, Serie, Gewicht)
 
 Schmerz-Bremse: Ein Wert ≥ 5/10 in den letzten 7 Tagen setzt die Phase eine Stufe zurück.

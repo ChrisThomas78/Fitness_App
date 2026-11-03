@@ -262,6 +262,33 @@ def stats():
     return {"series": series, "nutrition": list(nut.values()), "streak": streak}
 
 
+@app.get("/api/homepage")
+def homepage():
+    """Kurzwerte für die Homelab-Startseite (gethomepage, customapi-Widget)."""
+    today = date.today()
+    with db() as c:
+        p = day_payload(today, get_settings(), c)
+        n = c.execute("SELECT day, kcal, protein FROM nutrition WHERE kcal IS NOT NULL ORDER BY day DESC LIMIT 1").fetchone()
+        weight = next((json.loads(r["data"]).get("weight") for r in
+                       c.execute("SELECT data FROM logs ORDER BY day DESC") if json.loads(r["data"]).get("weight")), None)
+    clock = datetime.now().strftime("%H:%M")
+    nxt = next((f'{b["time"]} {b["title"]}' for b in p["blocks"]
+                if b["kind"] in ("workout", "walk") and b["time"] >= clock
+                and not p["log"].get("done", {}).get(b["id"])), "für heute nichts mehr")
+    kcal = "–"
+    if n:
+        when = "heute" if n["day"] == today.isoformat() else date.fromisoformat(n["day"]).strftime("%d.%m.")
+        kcal = f'{n["kcal"]:.0f} kcal · {n["protein"] or 0:.0f} g P ({when})'
+    return {
+        "woche": f'{p["week"]}/{plan.WEEKS} · {p["phase_name"]}' if p.get("week") else "–",
+        "heute": f'{p["score"]["done"]}/{p["score"]["total"]}',
+        "serie": stats()["streak"],
+        "naechstes": nxt,
+        "ernaehrung": kcal,
+        "gewicht": f"{weight} kg" if weight else "–",
+    }
+
+
 @app.get("/api/export")
 def export():
     """Alles für den Coach (Claude) bzw. ein lokales LLM."""
