@@ -107,7 +107,7 @@ async function renderToday() {
   const n = d.nutrition;
   h += `<div class="card"><div class="row between"><h3>Ernährung (Yazio)</h3><span class="small muted">${n ? 'importiert' : 'noch kein Import'}</span></div>
     ${n ? `<div class="two"><div class="stat"><div class="v">${Math.round(n.kcal || 0)}</div><div class="l">kcal von ${set.kcal_target}</div></div>
-      <div class="stat"><div class="v">${Math.round(n.protein || 0)} g</div><div class="l">Eiweiß von ${set.protein_target} g</div></div></div>
+      <div class="stat"><div class="v">${n.protein == null ? '–' : Math.round(n.protein) + ' g'}</div><div class="l">Eiweiß von ${set.protein_target} g</div></div></div>
       <div class="progress"><div style="width:${Math.min(100, 100 * (n.kcal || 0) / set.kcal_target)}%"></div></div>`
       : `<div class="small muted">Kommt automatisch per iPhone-Kurzbefehl aus Apple Health – Anleitung unter ⚙️.</div>`}</div>`;
 
@@ -269,7 +269,7 @@ async function renderStats() {
     <div class="card"><h3>Gewicht</h3>${lineChart(w, 'kg')}</div>
     <div class="card"><h3>Bauchumfang</h3>${lineChart(wa, 'cm')}</div>
     <div class="card"><h3>Ernährung (Yazio, 14 Tage)</h3>${nut.length ? `<div class="small muted">Ø ${avg} kcal/Tag</div>
-      <table class="t"><tr><th>Tag</th><th>kcal</th><th>Eiweiß</th></tr>${nut.slice().reverse().map(n => `<tr><td>${fmt(n.day)}</td><td>${Math.round(n.kcal || 0)}</td><td>${Math.round(n.protein || 0)} g</td></tr>`).join('')}</table>`
+      <table class="t"><tr><th>Tag</th><th>kcal</th><th>Eiweiß</th></tr>${nut.slice().reverse().map(n => `<tr><td>${fmt(n.day)}</td><td>${Math.round(n.kcal || 0)}</td><td>${n.protein == null ? '–' : Math.round(n.protein) + ' g'}</td></tr>`).join('')}</table>`
       : '<div class="small muted">Noch keine Daten – Kurzbefehl einrichten (⚙️).</div>'}</div>
     <div class="card"><h3>Schmerz-Tagebuch</h3><table class="t"><tr><th>Tag</th><th>Achilles</th><th>Knie</th><th>Nacken</th><th>Bauch</th></tr>
       ${st.series.filter(s => Object.keys(s.pain || {}).length).slice(-14).reverse().map(s => `<tr><td>${fmt(s.day)}</td>${['Achilles', 'Knie', 'Nacken', 'Bauch'].map(k => `<td>${s.pain[k] ?? '–'}</td>`).join('')}</tr>`).join('') || '<tr><td colspan="5" class="muted">Noch keine Einträge</td></tr>'}</table></div>`;
@@ -299,7 +299,16 @@ function renderSettings() {
         <li>Dasselbe für <i>Protein</i>, <i>Kohlenhydrate</i>, <i>Fett gesamt</i> (optional <i>Gewicht</i>: neuestes Sample).</li>
         <li>Aktion <b>„Inhalte von URL abrufen“</b>: URL <code>${esc(url)}</code>, Methode <b>POST</b>, Anfragetext <b>JSON</b> mit den Feldern <code>kcal</code>, <code>protein</code>, <code>carbs</code>, <code>fat</code> (und <code>weight</code>).</li>
       </ol>
-      <div class="small muted">Klappt nur mit aktivem VPN. Der Import überschreibt den Tag – mehrfach senden ist ok.</div></div>
+      <div class="small muted">Unterwegs klappt es nur mit aktivem VPN. Der Import überschreibt den Tag – mehrfach senden ist ok.</div>
+      <h3 style="margin-top:12px">Zweite Automation: gestern nachsenden (7:00)</h3>
+      <div class="small">Fängt Tage auf, an denen um 21:30 nichts ankam (z. B. Training oder Spiel), und holt späte Snacks nach. Den Kurzbefehl oben duplizieren und so ändern:</div>
+      <ol class="steps small">
+        <li>Automation → Neu → <b>Tageszeit 7:00</b>, täglich, „Sofort ausführen“, mit dem duplizierten Kurzbefehl.</li>
+        <li>Ganz oben: <b>„Datum“</b> (aktuelles Datum) → <b>„Datum anpassen“: Anfang von Tag</b> → Variable <i>heute0</i>. Dann <b>„Datum anpassen“: 1 Tag subtrahieren</b> von <i>heute0</i> → Variable <i>gestern0</i>.</li>
+        <li>In jedem „Health-Samples suchen“ den Filter ändern auf <b>Startdatum ist zwischen <i>gestern0</i> und <i>heute0</i></b>.</li>
+        <li><b>„Datum formatieren“</b>: <i>gestern0</i>, Format benutzerdefiniert <code>yyyy-MM-dd</code> → im JSON zusätzlich das Feld <code>date</code> damit füllen.</li>
+      </ol>
+      <div class="small muted">Ohne Feld <code>date</code> landet der Wert auf heute – dann wäre der Vortag falsch gebucht. Die Bezeichnungen können je nach iOS-Version leicht abweichen.</div></div>
     <div class="card"><h3>Für den Coach</h3><div class="small">Alle Einträge als JSON: <a href="/api/export" target="_blank">/api/export</a> – damit kann Claude (oder dein lokales LLM) den Plan anpassen.</div></div>`;
   $('#save').onclick = async () => {
     S.cfg.settings = await api('settings', { method: 'PUT', body: JSON.stringify({

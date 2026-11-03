@@ -278,7 +278,7 @@ def homepage():
     kcal = "–"
     if n:
         when = "heute" if n["day"] == today.isoformat() else date.fromisoformat(n["day"]).strftime("%d.%m.")
-        kcal = f'{n["kcal"]:.0f} kcal · {n["protein"] or 0:.0f} g P ({when})'
+        kcal = f'{n["kcal"]:.0f} kcal' + (f' · {n["protein"]:.0f} g P' if n["protein"] is not None else '') + f' ({when})'
     return {
         "woche": f'{p["week"]}/{plan.WEEKS} · {p["phase_name"]}' if p.get("week") else "–",
         "heute": f'{p["score"]["done"]}/{p["score"]["total"]}',
