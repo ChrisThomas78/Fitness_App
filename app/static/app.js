@@ -291,31 +291,45 @@ function renderSettings() {
       <div><label class="f">Eiweiß g / Tag</label><input type="number" id="pr" value="${s.protein_target}"></div></div>
       <div class="small muted" style="margin-top:.4rem">Startwert: ca. 2.200 kcal und 140 g Eiweiß (moderates Defizit). Das genaue Ziel stellst du in Yazio ein und überträgst es hierher.</div></div>
     <button class="btn primary" id="save">Speichern</button> <span id="saved" class="small muted"></span>
-    <div class="card" style="margin-top:12px"><h3>Yazio → App (iPhone-Kurzbefehl)</h3>
-      <div class="small">Yazio hat keine offene Schnittstelle, schreibt aber Kalorien und Makros in <b>Apple Health</b> (in Yazio: Profil → Einstellungen → Apps & Geräte → Apple Health → „Ernährung“ schreiben). Der Kurzbefehl liest Health und schickt die Werte hierher:</div>
+    <div class="card" style="margin-top:12px"><h3>Yazio → App (iPhone-Kurzbefehle)</h3>
+      <div class="small">Yazio hat keine offene Schnittstelle, schreibt aber Kalorien und Makros in <b>Apple Health</b> (in Yazio: Profil → Einstellungen → Apps & Geräte → Apple Health → „Ernährung“ schreiben). Zwei Kurzbefehle lesen Health und schicken die Werte hierher. <b>Kurzbefehl 2 ist eine Kopie von Kurzbefehl 1</b> (in Kurzbefehle: lange drücken → Duplizieren) mit den markierten Änderungen.</div>
+      <h3 style="margin-top:12px">Kurzbefehl 1 „Yazio heute“ – Automation 21:30</h3>
       <ol class="steps small">
-        <li>Kurzbefehle → Automation → Neu → <b>Tageszeit 21:30</b>, täglich, „Sofort ausführen“.</li>
-        <li><b>VPN einschalten (für unterwegs):</b> <b>„Netzwerkdetails abrufen“</b> → <i>WLAN</i> / <i>Netzwerkname</i>. Dann <b>„Wenn“</b> <i>Netzwerkname</i> <b>ist nicht</b> <code>SkyNet</code>: <b>„VPN festlegen“ → Verbinden</b> (dein VPN wählen) und <b>„Warten“ 5 Sekunden</b>, damit der Tunnel wirklich steht. <b>Ende Wenn</b>.</li>
-        <li>Aktion <b>„Health-Samples suchen“</b>: Typ <i>Aufgenommene Energie</i>, Startdatum <i>heute</i> → <b>„Statistiken berechnen“: Summe</b> → Variable <i>kcal</i>.</li>
-        <li>Dasselbe für <i>Protein</i>, <i>Kohlenhydrate</i>, <i>Fett gesamt</i> (optional <i>Gewicht</i>: neuestes Sample).</li>
-        <li>Aktion <b>„Inhalte von URL abrufen“</b>: URL <code>${esc(url)}</code>, Methode <b>POST</b>, Anfragetext <b>JSON</b> mit den Feldern <code>kcal</code>, <code>protein</code>, <code>carbs</code>, <code>fat</code> (und <code>weight</code>).</li>
-        <li><b>Fehler melden:</b> <b>„Wenn“</b> <i>Inhalte von URL</i> <b>enthält nicht</b> <code>"ok":true</code>: <b>„Mitteilung zeigen“</b> „Yazio-Sync fehlgeschlagen“. <b>Ende Wenn</b>.</li>
-        <li><b>VPN wieder aus:</b> <b>„Wenn“</b> <i>Netzwerkname</i> <b>ist nicht</b> <code>SkyNet</code>: <b>„VPN festlegen“ → Trennen</b>. <b>Ende Wenn</b>.</li>
+        <li><b>Netzwerkdetails abrufen</b>: WLAN → Netzwerkname</li>
+        <li><b>Wenn</b> <i>Netzwerkdetails</i> <b>ist nicht</b> <code>SkyNet</code></li>
+        <li>&nbsp;&nbsp;<b>VPN festlegen</b>: dein VPN → <b>Verbinden</b></li>
+        <li>&nbsp;&nbsp;<b>Warten</b>: 5 Sekunden</li>
+        <li><b>Ende Wenn</b></li>
+        <li><b>Health-Samples suchen</b>: <i>Aufgenommene Energie</i>, Startdatum <b>ist heute</b> → <b>Statistiken berechnen</b>: Summe → <b>Variable festlegen</b> <i>kcal</i></li>
+        <li>dasselbe für <i>Protein</i> → <i>protein</i>, <i>Kohlenhydrate</i> → <i>carbs</i>, <i>Fett gesamt</i> → <i>fat</i></li>
+        <li><b>Health-Samples suchen</b>: <i>Gewicht</i>, sortiert nach Startdatum neueste zuerst, Limit 1 → <b>Variable festlegen</b> <i>weight</i> (optional)</li>
+        <li><b>Inhalte von URL abrufen</b>: <code>${esc(url)}</code>, Methode <b>POST</b>, Anfragetext <b>JSON</b>: <code>kcal</code>, <code>protein</code>, <code>carbs</code>, <code>fat</code>, <code>weight</code> (Typ Text, Wert = gleichnamige Variable)</li>
+        <li><b>Wenn</b> <i>Inhalte von URL</i> <b>enthält nicht</b> <code>"ok":true</code> → <b>Mitteilung zeigen</b> „Yazio-Sync fehlgeschlagen“ → <b>Ende Wenn</b></li>
+        <li><b>Wenn</b> <i>Netzwerkdetails</i> <b>ist nicht</b> <code>SkyNet</code> → <b>VPN festlegen</b>: <b>Trennen</b> → <b>Ende Wenn</b></li>
       </ol>
-      <div class="small muted">Im WLAN SkyNet bleibt das VPN aus. Der Import überschreibt den Tag – mehrfach senden ist ok.</div>
-      <h3 style="margin-top:12px">Zweite Automation: letzte 3 Tage nachsenden (7:00)</h3>
-      <div class="small">Fängt Tage auf, an denen um 21:30 nichts ankam (Training, Spiel, Messe, Funkloch), und holt späte Snacks nach. Sie schickt jeden Morgen die <b>letzten 3 Tage</b> – klappt es einen Morgen nicht (z. B. kein Netz im Auto), holt der nächste Lauf alles nach. Den Kurzbefehl oben duplizieren und so ändern:</div>
+      <div class="small muted">Automation → Neu → Tageszeit <b>21:30</b>, täglich, „Sofort ausführen“ → Kurzbefehl 1.</div>
+      <h3 style="margin-top:12px">Kurzbefehl 2 „Yazio nachsenden“ – Automation 7:00</h3>
+      <div class="small">Schickt jeden Morgen die <b>letzten 3 Tage</b> (gestern, vorgestern, vor 3 Tagen). Fällt ein Abend oder ein Morgen aus (Training, Messe, kein Netz im Auto), holt der nächste Lauf alles nach. ✱ = anders als in Kurzbefehl 1.</div>
       <ol class="steps small">
-        <li>Automation → Neu → <b>Tageszeit 7:00</b>, täglich, „Sofort ausführen“, mit dem duplizierten Kurzbefehl.</li>
-        <li><b>VPN-Schritte bleiben wie oben</b> (Einschalten ganz am Anfang, Ausschalten ganz am Ende) – unterwegs geht das VPN also auch um 7 Uhr auf.</li>
-        <li>Nach dem VPN-Teil: <b>„Datum“</b> (aktuelles Datum) → <b>„Datum anpassen“: Anfang von Tag</b> → Variable <i>heute0</i>.</li>
-        <li><b>„Wiederholen“ 3-mal</b>. Alles Folgende kommt <b>in</b> die Wiederholung:
-          <b>„Datum anpassen“</b>: <i>Wiederholungsindex</i> Tage von <i>heute0</i> subtrahieren → Variable <i>tag0</i>; dann <b>„Datum anpassen“</b>: 1 Tag zu <i>tag0</i> addieren → Variable <i>tag1</i>.</li>
-        <li>In der Wiederholung: die „Health-Samples suchen“-Schritte (kcal, Eiweiß, Kohlenhydrate, Fett) mit Filter <b>Startdatum ist zwischen <i>tag0</i> und <i>tag1</i></b>.</li>
-        <li>In der Wiederholung: <b>„Datum formatieren“</b> <i>tag0</i>, benutzerdefiniert <code>yyyy-MM-dd</code> → im JSON das Feld <code>date</code> damit füllen; danach „Inhalte von URL abrufen“ und die Fehlermeldung wie oben. <b>Ende Wiederholen</b>.</li>
-        <li><b>Gewicht weglassen:</b> das „Health-Samples suchen“ für <i>Gewicht</i> und das Feld <code>weight</code> löschen – um 7 Uhr wäre das schon das Gewicht von heute.</li>
+        <li><b>Netzwerkdetails abrufen</b>: WLAN → Netzwerkname</li>
+        <li><b>Wenn</b> <i>Netzwerkdetails</i> <b>ist nicht</b> <code>SkyNet</code></li>
+        <li>&nbsp;&nbsp;<b>VPN festlegen</b>: dein VPN → <b>Verbinden</b></li>
+        <li>&nbsp;&nbsp;<b>Warten</b>: 5 Sekunden</li>
+        <li><b>Ende Wenn</b></li>
+        <li>✱ <b>Datum</b>: Aktuelles Datum</li>
+        <li>✱ <b>Datum anpassen</b>: <b>Anfang von Tag</b> von <i>Datum</i> → <b>Variable festlegen</b> <i>heute0</i></li>
+        <li>✱ <b>Wiederholen</b>: <b>3-mal</b></li>
+        <li>&nbsp;&nbsp;✱ <b>Datum anpassen</b>: <i>Wiederholungsindex</i> <b>Tage subtrahieren</b> von <i>heute0</i> → <b>Variable festlegen</b> <i>tag0</i></li>
+        <li>&nbsp;&nbsp;✱ <b>Datum anpassen</b>: <b>1 Tag addieren</b> zu <i>tag0</i> → <b>Variable festlegen</b> <i>tag1</i></li>
+        <li>&nbsp;&nbsp;✱ <b>Health-Samples suchen</b>: <i>Aufgenommene Energie</i>, Startdatum <b>ist zwischen <i>tag0</i> und <i>tag1</i></b> → <b>Statistiken berechnen</b>: Summe → <b>Variable festlegen</b> <i>kcal</i></li>
+        <li>&nbsp;&nbsp;✱ dasselbe (Filter zwischen <i>tag0</i> und <i>tag1</i>) für <i>Protein</i> → <i>protein</i>, <i>Kohlenhydrate</i> → <i>carbs</i>, <i>Fett gesamt</i> → <i>fat</i></li>
+        <li>&nbsp;&nbsp;✱ <b>Datum formatieren</b>: <i>tag0</i>, Datumsformat <b>Eigenes</b> <code>yyyy-MM-dd</code> → <b>Variable festlegen</b> <i>datum</i></li>
+        <li>&nbsp;&nbsp;<b>Inhalte von URL abrufen</b>: <code>${esc(url)}</code>, <b>POST</b>, <b>JSON</b>: ✱ <code>date</code> = <i>datum</i>, <code>kcal</code>, <code>protein</code>, <code>carbs</code>, <code>fat</code> – ✱ <b>ohne</b> <code>weight</code></li>
+        <li>&nbsp;&nbsp;<b>Wenn</b> <i>Inhalte von URL</i> <b>enthält nicht</b> <code>"ok":true</code> → <b>Mitteilung zeigen</b> „Yazio-Nachsenden fehlgeschlagen: <i>datum</i>“ → <b>Ende Wenn</b></li>
+        <li>✱ <b>Ende Wiederholen</b></li>
+        <li><b>Wenn</b> <i>Netzwerkdetails</i> <b>ist nicht</b> <code>SkyNet</code> → <b>VPN festlegen</b>: <b>Trennen</b> → <b>Ende Wenn</b></li>
       </ol>
-      <div class="small muted">Wiederholungsindex 1, 2, 3 = gestern, vorgestern, vor 3 Tagen. Ohne Feld <code>date</code> landet der Wert auf heute. Mehrfach senden ist ok, der neuere Stand ersetzt den älteren. Kommen keine kcal an (0 oder leer), ändert die App nichts und antwortet ohne <code>"ok":true</code> – dann kommt die Fehlermeldung. Die Bezeichnungen können je nach iOS-Version leicht abweichen.</div></div>
+      <div class="small muted">Automation → Neu → Tageszeit <b>7:00</b>, täglich, „Sofort ausführen“ → Kurzbefehl 2. Gewicht fehlt absichtlich (um 7 Uhr wäre es schon das von heute). Mehrfach senden ist ok, der neuere Stand ersetzt den älteren; kommen keine kcal an, ändert die App nichts und meldet einen Fehler. Die Bezeichnungen können je nach iOS-Version leicht abweichen.</div></div>
     <div class="card"><h3>Für den Coach</h3><div class="small">Alle Einträge als JSON: <a href="/api/export" target="_blank">/api/export</a> – damit kann Claude (oder dein lokales LLM) den Plan anpassen.</div></div>`;
   $('#save').onclick = async () => {
     S.cfg.settings = await api('settings', { method: 'PUT', body: JSON.stringify({
