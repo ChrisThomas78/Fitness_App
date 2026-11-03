@@ -295,11 +295,14 @@ function renderSettings() {
       <div class="small">Yazio hat keine offene Schnittstelle, schreibt aber Kalorien und Makros in <b>Apple Health</b> (in Yazio: Profil → Einstellungen → Apps & Geräte → Apple Health → „Ernährung“ schreiben). Der Kurzbefehl liest Health und schickt die Werte hierher:</div>
       <ol class="steps small">
         <li>Kurzbefehle → Automation → Neu → <b>Tageszeit 21:30</b>, täglich, „Sofort ausführen“.</li>
+        <li><b>VPN einschalten (für unterwegs):</b> <b>„Netzwerkdetails abrufen“</b> → <i>WLAN</i> / <i>Netzwerkname</i>. Dann <b>„Wenn“</b> <i>Netzwerkname</i> <b>ist nicht</b> <code>SkyNet</code>: <b>„VPN festlegen“ → Verbinden</b> (dein VPN wählen) und <b>„Warten“ 5 Sekunden</b>, damit der Tunnel wirklich steht. <b>Ende Wenn</b>.</li>
         <li>Aktion <b>„Health-Samples suchen“</b>: Typ <i>Aufgenommene Energie</i>, Startdatum <i>heute</i> → <b>„Statistiken berechnen“: Summe</b> → Variable <i>kcal</i>.</li>
         <li>Dasselbe für <i>Protein</i>, <i>Kohlenhydrate</i>, <i>Fett gesamt</i> (optional <i>Gewicht</i>: neuestes Sample).</li>
         <li>Aktion <b>„Inhalte von URL abrufen“</b>: URL <code>${esc(url)}</code>, Methode <b>POST</b>, Anfragetext <b>JSON</b> mit den Feldern <code>kcal</code>, <code>protein</code>, <code>carbs</code>, <code>fat</code> (und <code>weight</code>).</li>
+        <li><b>Fehler melden:</b> <b>„Wenn“</b> <i>Inhalte von URL</i> <b>enthält nicht</b> <code>"ok":true</code>: <b>„Mitteilung zeigen“</b> „Yazio-Sync fehlgeschlagen“. <b>Ende Wenn</b>.</li>
+        <li><b>VPN wieder aus:</b> <b>„Wenn“</b> <i>Netzwerkname</i> <b>ist nicht</b> <code>SkyNet</code>: <b>„VPN festlegen“ → Trennen</b>. <b>Ende Wenn</b>.</li>
       </ol>
-      <div class="small muted">Unterwegs klappt es nur mit aktivem VPN. Der Import überschreibt den Tag – mehrfach senden ist ok.</div>
+      <div class="small muted">Im WLAN SkyNet bleibt das VPN aus. Der Import überschreibt den Tag – mehrfach senden ist ok.</div>
       <h3 style="margin-top:12px">Zweite Automation: gestern nachsenden (7:00)</h3>
       <div class="small">Fängt Tage auf, an denen um 21:30 nichts ankam (z. B. Training oder Spiel), und holt späte Snacks nach. Den Kurzbefehl oben duplizieren und so ändern:</div>
       <ol class="steps small">
