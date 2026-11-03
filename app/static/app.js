@@ -303,16 +303,19 @@ function renderSettings() {
         <li><b>VPN wieder aus:</b> <b>„Wenn“</b> <i>Netzwerkname</i> <b>ist nicht</b> <code>SkyNet</code>: <b>„VPN festlegen“ → Trennen</b>. <b>Ende Wenn</b>.</li>
       </ol>
       <div class="small muted">Im WLAN SkyNet bleibt das VPN aus. Der Import überschreibt den Tag – mehrfach senden ist ok.</div>
-      <h3 style="margin-top:12px">Zweite Automation: gestern nachsenden (7:00)</h3>
-      <div class="small">Fängt Tage auf, an denen um 21:30 nichts ankam (z. B. Training oder Spiel), und holt späte Snacks nach. Den Kurzbefehl oben duplizieren und so ändern:</div>
+      <h3 style="margin-top:12px">Zweite Automation: letzte 3 Tage nachsenden (7:00)</h3>
+      <div class="small">Fängt Tage auf, an denen um 21:30 nichts ankam (Training, Spiel, Messe, Funkloch), und holt späte Snacks nach. Sie schickt jeden Morgen die <b>letzten 3 Tage</b> – klappt es einen Morgen nicht (z. B. kein Netz im Auto), holt der nächste Lauf alles nach. Den Kurzbefehl oben duplizieren und so ändern:</div>
       <ol class="steps small">
         <li>Automation → Neu → <b>Tageszeit 7:00</b>, täglich, „Sofort ausführen“, mit dem duplizierten Kurzbefehl.</li>
-        <li>Ganz oben: <b>„Datum“</b> (aktuelles Datum) → <b>„Datum anpassen“: Anfang von Tag</b> → Variable <i>heute0</i>. Dann <b>„Datum anpassen“: 1 Tag subtrahieren</b> von <i>heute0</i> → Variable <i>gestern0</i>.</li>
-        <li>In jedem „Health-Samples suchen“ den Filter ändern auf <b>Startdatum ist zwischen <i>gestern0</i> und <i>heute0</i></b>.</li>
-        <li><b>„Datum formatieren“</b>: <i>gestern0</i>, Format benutzerdefiniert <code>yyyy-MM-dd</code> → im JSON zusätzlich das Feld <code>date</code> damit füllen.</li>
-        <li><b>Gewicht weglassen:</b> das „Health-Samples suchen“ für <i>Gewicht</i> und das Feld <code>weight</code> im JSON löschen – um 7 Uhr wäre das schon das Gewicht von heute.</li>
+        <li><b>VPN-Schritte bleiben wie oben</b> (Einschalten ganz am Anfang, Ausschalten ganz am Ende) – unterwegs geht das VPN also auch um 7 Uhr auf.</li>
+        <li>Nach dem VPN-Teil: <b>„Datum“</b> (aktuelles Datum) → <b>„Datum anpassen“: Anfang von Tag</b> → Variable <i>heute0</i>.</li>
+        <li><b>„Wiederholen“ 3-mal</b>. Alles Folgende kommt <b>in</b> die Wiederholung:
+          <b>„Datum anpassen“</b>: <i>Wiederholungsindex</i> Tage von <i>heute0</i> subtrahieren → Variable <i>tag0</i>; dann <b>„Datum anpassen“</b>: 1 Tag zu <i>tag0</i> addieren → Variable <i>tag1</i>.</li>
+        <li>In der Wiederholung: die „Health-Samples suchen“-Schritte (kcal, Eiweiß, Kohlenhydrate, Fett) mit Filter <b>Startdatum ist zwischen <i>tag0</i> und <i>tag1</i></b>.</li>
+        <li>In der Wiederholung: <b>„Datum formatieren“</b> <i>tag0</i>, benutzerdefiniert <code>yyyy-MM-dd</code> → im JSON das Feld <code>date</code> damit füllen; danach „Inhalte von URL abrufen“ und die Fehlermeldung wie oben. <b>Ende Wiederholen</b>.</li>
+        <li><b>Gewicht weglassen:</b> das „Health-Samples suchen“ für <i>Gewicht</i> und das Feld <code>weight</code> löschen – um 7 Uhr wäre das schon das Gewicht von heute.</li>
       </ol>
-      <div class="small muted">Ohne Feld <code>date</code> landet der Wert auf heute – dann wäre der Vortag falsch gebucht. Kommen keine kcal an (0 oder leer), ändert die App nichts und antwortet ohne <code>"ok":true</code> – dann kommt die Fehlermeldung. Die Bezeichnungen können je nach iOS-Version leicht abweichen.</div></div>
+      <div class="small muted">Wiederholungsindex 1, 2, 3 = gestern, vorgestern, vor 3 Tagen. Ohne Feld <code>date</code> landet der Wert auf heute. Mehrfach senden ist ok, der neuere Stand ersetzt den älteren. Kommen keine kcal an (0 oder leer), ändert die App nichts und antwortet ohne <code>"ok":true</code> – dann kommt die Fehlermeldung. Die Bezeichnungen können je nach iOS-Version leicht abweichen.</div></div>
     <div class="card"><h3>Für den Coach</h3><div class="small">Alle Einträge als JSON: <a href="/api/export" target="_blank">/api/export</a> – damit kann Claude (oder dein lokales LLM) den Plan anpassen.</div></div>`;
   $('#save').onclick = async () => {
     S.cfg.settings = await api('settings', { method: 'PUT', body: JSON.stringify({
