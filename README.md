@@ -21,7 +21,7 @@ Rezepte aus Mealie, Verlauf. FastAPI + SQLite, läuft neben dem Trainingsplaner 
 - `GET /api/day/YYYY-MM-DD`, `GET /api/week/YYYY-MM-DD`
 - `PUT /api/log/YYYY-MM-DD` – `{done, ex, pain:{Achilles,Knie,Nacken,Bauch}, weight, waist, energy, drinks, note, swap}`
 - `PUT /api/settings` – `{strength_days: 2|3|4, minutes: 20|30|45, level: "auto"|"1"|"2"|"3", kcal_target, protein_target, doctor_ok}`
-- `POST /api/nutrition` – `{date, kcal, protein, carbs, fat, weight}` (iOS-Kurzbefehl aus Apple Health/Yazio)
+- `POST /api/nutrition` – `{date, kcal, protein, carbs, fat, weight}` (iOS-Kurzbefehl aus Apple Health/Yazio). Ohne kcal: keine Änderung, Antwort ok:false; fehlende Makros überschreiben vorhandene nicht. Kurzbefehle: 21:30 heute, 7:00 letzte 3 Tage (Anleitung in den Einstellungen)
 - `GET /api/stats`, `GET /api/export`
 - `GET /api/homepage` – Kurzwerte für die Homelab-Startseite (Woche/Phase, heute erledigt, als Nächstes, Ernährung, Serie, Gewicht)
 
